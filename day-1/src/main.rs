@@ -1,7 +1,6 @@
 const INPUT: &str = include_str!("./input.txt");
 
 fn get_line_value_part1(line: &str) -> u64 {
-    // iterate
     let first = line
         .chars()
         .find(|c| c.is_numeric())
@@ -19,11 +18,6 @@ fn get_line_value_part1(line: &str) -> u64 {
 
     (first * 10 + last) as u64
 }
-
-// fn get_line_value_part1_2(line: &str) -> u64 {
-//     let digits = Vec::new();
-
-// }
 
 fn advance_parser_state<const SIZE: usize>(c: char, parser: &mut (u32, &[u8; SIZE], u32)) -> Option<u32> {
     if c == parser.1[parser.0 as usize] as char {
@@ -122,8 +116,8 @@ fn get_line_value_part2(line: &str) -> u64 {
 }
 
 fn main() {
-    // let result = INPUT.lines().map(get_line_value_part1).sum::<u64>();
-    // println!("Part 1 result is {result}");
+    let result = INPUT.lines().map(get_line_value_part1).sum::<u64>();
+    println!("Part 1 result is {result}");
 
     let result = INPUT.lines().map(get_line_value_part2).sum::<u64>();
     println!("Part 2 result is {result}");
