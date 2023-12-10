@@ -1,5 +1,5 @@
-use std::{collections::{HashMap, HashSet}, ops::RangeBounds};
 use lazy_static::lazy_static;
+use std::collections::HashMap;
 
 lazy_static! {
     static ref FIVE: HashMap<u8, u8> = {
@@ -82,7 +82,7 @@ impl From<char> for Card {
             '3' => Card::Three,
             '2' => Card::Two,
             '1' => Card::One,
-            c => panic!("Bad input: {}", c)
+            c => panic!("Bad input: {}", c),
         }
     }
 }
@@ -127,17 +127,22 @@ impl Hand {
         let hand_type = Hand::compute_type(&card_map);
 
         Self {
-            hand: cards.iter().copied().collect(),
-            card_map: card_map,
+            hand: cards.to_vec(),
+            card_map,
             hand_type,
             bet,
         }
     }
-    
+
     pub fn from_str(s: &str) -> Self {
         // Convert s into card slice
         let mut line_iter = s.split_whitespace();
-        let hand = line_iter.next().unwrap().chars().map(|c| c.into()).collect::<Vec<_>>();
+        let hand = line_iter
+            .next()
+            .unwrap()
+            .chars()
+            .map(|c| c.into())
+            .collect::<Vec<_>>();
         let bet = line_iter.next().unwrap().parse().unwrap();
         Hand::new(&[hand[0], hand[1], hand[2], hand[3], hand[4]], bet)
     }
@@ -151,19 +156,19 @@ impl Hand {
         }
 
         if count_count == *FIVE {
-            return HandType::FiveOfAKind;
+            HandType::FiveOfAKind
         } else if count_count == *FOUR {
-            return HandType::FourOfAKind;
+            HandType::FourOfAKind
         } else if count_count == *FULL_HOUSE {
-            return HandType::FullHouse;
+            HandType::FullHouse
         } else if count_count == *THREE {
-            return HandType::ThreeOfAKind;
+            HandType::ThreeOfAKind
         } else if count_count == *TWO_PAIR {
-            return HandType::TwoPair;
+            HandType::TwoPair
         } else if count_count == *PAIR {
-            return HandType::OnePair;
+            HandType::OnePair
         } else if count_count == *HIGH_CARD {
-            return HandType::HighCard;
+            HandType::HighCard
         } else {
             panic!("Unrecognized hand type {:?}", card_map);
         }
@@ -171,8 +176,12 @@ impl Hand {
 }
 
 fn main() {
-    let mut hands = INPUT.lines().map(|l| Hand::from_str(l)).collect::<Vec<_>>();
+    let mut hands = INPUT.lines().map(Hand::from_str).collect::<Vec<_>>();
     hands.sort();
-    let total_winnings: u64 = hands.iter().enumerate().map(|(rank, h)| h.bet * (rank as u64 + 1)).sum();
+    let total_winnings: u64 = hands
+        .iter()
+        .enumerate()
+        .map(|(rank, h)| h.bet * (rank as u64 + 1))
+        .sum();
     println!("{}", total_winnings);
 }
